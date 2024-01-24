@@ -14,12 +14,18 @@ import java.time.LocalDateTime;
 @Table(name = "secret")
 public class Secret {
 
-    @Id
+    Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long secretId;
 
-    private String text;
+    @Column(nullable = false)
+    private String hashedText;
+
+    @Column(nullable = false)
+    private String originalText;
+
     private int remainingViews;
+
     private LocalDateTime expiryTime;
 
     @Transient
