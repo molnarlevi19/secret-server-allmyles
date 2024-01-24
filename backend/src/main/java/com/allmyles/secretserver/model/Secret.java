@@ -1,6 +1,8 @@
 package com.allmyles.secretserver.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,19 +16,24 @@ import java.time.LocalDateTime;
 @Table(name = "secret")
 public class Secret {
 
-    Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long secretId;
 
-    @Column(nullable = false)
-    private String hashedText;
+    @Column(nullable = false, unique = true)
+    private String hash;
 
     @Column(nullable = false)
-    private String originalText;
+    private String secretText;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @FutureOrPresent(message = "Expiry date must be in the future or present")
+    private LocalDateTime expiresAt;
 
     private int remainingViews;
-
-    private LocalDateTime expiryTime;
 
     @Transient
     private Integer expiryTimeInMinutes;
