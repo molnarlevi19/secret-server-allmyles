@@ -28,16 +28,22 @@ public class SecretService {
         int remainingViews = secret.getRemainingViews();
         Integer expiryTimeInMinutes = secret.getExpiryTimeInMinutes();
 
+
         String hashedText = hashTextWithBcrypt(text);
 
-        newSecret.setText(hashedText);
+        newSecret.setOriginalText(text);
+        newSecret.setHashedText(hashedText);
         newSecret.setRemainingViews(remainingViews);
 
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(expiryTimeInMinutes);
-        newSecret.setExpiryTime(expiryTime);
+        if (expiryTimeInMinutes != null && expiryTimeInMinutes > 0) {
+            LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(expiryTimeInMinutes);
+            newSecret.setExpiryTime(expiryTime);
+        } else {
+            newSecret.setExpiryTime(null);
+        }
 
         Secret savedSecret = secretRepository.save(newSecret);
-        return savedSecret.getSecretId().toString();
+        return savedSecret.getOriginalText();
     }
 
     private String hashTextWithBcrypt(String text) {
