@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface SecretRepository extends JpaRepository<Secret, Long> {
-    Optional<Secret> findByText(String text);
 
-    Secret save(Secret secret);
+    Optional<Secret> findBySecretText(String text);
 
+    //Secret save(Secret secret);
+
+    Optional<Secret> findByHash(String hash);
 }

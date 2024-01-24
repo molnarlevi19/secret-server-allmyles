@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -27,13 +29,9 @@ public class SecretController {
         this.logger = logger;
     }
 
-    @GetMapping("/all")
-    public List<Secret> getAllSecrets(){
-        return secretService.findAll();
-    }
     @GetMapping("/secret")
     public ResponseEntity<Secret> getSecret(String text){
-        Optional<Secret> optionalSecret = secretRepository.findByText(text);
+        Optional<Secret> optionalSecret = secretRepository.findBySecretText(text);
 
         if (optionalSecret.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -56,5 +54,55 @@ public class SecretController {
                     .body("An error occurred while saving the secret.");
         }
     }
+
+    /*@PatchMapping("/secret/{hash}")
+    public ResponseEntity<String> decreaseRemainingViews(@PathVariable String hash) {
+        try {
+            secretService.decreaseRemainingViews(hash);
+            return new ResponseEntity<>("Remaining views decreased successfully", HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            logger.logError("Error decreasing remaining views: {}" + e.getMessage());
+            return new ResponseEntity<>("Secret not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            logger.logError("Error decreasing remaining views: {}" + e.getMessage());
+            return new ResponseEntity<>("An error occurred while decreasing remaining views", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
+    @GetMapping("/secret/{hash}")
+    public ResponseEntity<String> viewSecret(@PathVariable String hash) {
+        String decodedHash = URLDecoder.decode(hash, StandardCharsets.UTF_8);
+        Optional<Secret> optionalSecret = secretService.getSecretByHash(decodedHash);
+
+        if (optionalSecret.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            Secret secret = optionalSecret.get();
+
+            // Check if remaining views are zero
+            if (secret.getRemainingViews() == 0) {
+                return new ResponseEntity<>("Secret is not viewable. Remaining views: 0", HttpStatus.FORBIDDEN);
+            }
+
+            // Check if expiration time is in the past
+            if (secret.getExpiresAt() != null && secret.getExpiresAt().isBefore(LocalDateTime.now())) {
+                return new ResponseEntity<>("Secret is not viewable. Expired", HttpStatus.FORBIDDEN);
+            }
+
+            // Decrease remaining views
+            if (secret.getRemainingViews() > 0) {
+                secretService.decreaseRemainingViews(decodedHash);
+            }
+
+            // Return the secret text if it's viewable
+            return new ResponseEntity<>(secret.getSecretText(), HttpStatus.OK);
+        }
+    }
+
+
+    /*@GetMapping("/all")
+    public List<Secret> getAllSecrets(){
+        return secretService.findAll();
+    }*/
 
 }
