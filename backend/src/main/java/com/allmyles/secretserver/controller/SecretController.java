@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
 
 @RestController
@@ -71,31 +71,32 @@ public class SecretController {
 
     @GetMapping("/secret/{hash}")
     public ResponseEntity<String> viewSecret(@PathVariable String hash) {
-        String decodedHash = URLDecoder.decode(hash, StandardCharsets.UTF_8);
-        Optional<Secret> optionalSecret = secretService.getSecretByHash(decodedHash);
+        try {
+            String decodedHash = new String(Base64.getUrlDecoder().decode(hash), StandardCharsets.UTF_8);
 
-        if (optionalSecret.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            Secret secret = optionalSecret.get();
+            Optional<Secret> optionalSecret = secretService.getSecretByHash(decodedHash);
 
-            // Check if remaining views are zero
-            if (secret.getRemainingViews() == 0) {
-                return new ResponseEntity<>("Secret is not viewable. Remaining views: 0", HttpStatus.FORBIDDEN);
+            if (optionalSecret.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                Secret secret = optionalSecret.get();
+
+                if (secret.getRemainingViews() == 0) {
+                    return new ResponseEntity<>("Secret is not viewable. Remaining views: 0", HttpStatus.FORBIDDEN);
+                }
+
+                if (secret.getExpiresAt() != null && secret.getExpiresAt().isBefore(LocalDateTime.now())) {
+                    return new ResponseEntity<>("Secret is not viewable. Expired", HttpStatus.FORBIDDEN);
+                }
+
+                if (secret.getRemainingViews() > 0) {
+                    secretService.decreaseRemainingViews(decodedHash);
+                }
+
+                return new ResponseEntity<>(secret.getSecretText(), HttpStatus.OK);
             }
-
-            // Check if expiration time is in the past
-            if (secret.getExpiresAt() != null && secret.getExpiresAt().isBefore(LocalDateTime.now())) {
-                return new ResponseEntity<>("Secret is not viewable. Expired", HttpStatus.FORBIDDEN);
-            }
-
-            // Decrease remaining views
-            if (secret.getRemainingViews() > 0) {
-                secretService.decreaseRemainingViews(decodedHash);
-            }
-
-            // Return the secret text if it's viewable
-            return new ResponseEntity<>(secret.getSecretText(), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Error decoding hash", HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -47,7 +48,7 @@ public class SecretService {
         }
 
         Secret savedSecret = secretRepository.save(newSecret);
-        return savedSecret.getHash();
+        return Base64.getUrlEncoder().encodeToString(savedSecret.getHash().getBytes());
     }
 
     private String hashTextWithBcrypt(String text) {
