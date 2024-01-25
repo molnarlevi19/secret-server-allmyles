@@ -25,24 +25,33 @@ public class SecretController {
         this.logger = logger;
     }
 
+    /**
+     * Endpoint for saving a secret.
+     *
+     * @param secret The secret to be saved.
+     * @return ResponseEntity containing the created secret's ID or an error message.
+     */
     @PostMapping("/secret")
     public ResponseEntity<String> sendSecret(@RequestBody Secret secret){
         try {
             String secretId = secretService.saveSecret(secret);
             return new ResponseEntity<>(secretId, HttpStatus.CREATED);
         } catch (Exception e) {
-
             logger.logError("Error saving secret: {} " + e.getMessage());
-
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while saving the secret.");
         }
     }
 
+    /**
+     * Endpoint for viewing a secretText based on its hash.
+     *
+     * @param hash The hash identifying the secret.
+     * @return ResponseEntity containing the secret text or an error message.
+     */
     @GetMapping("/secret/{hash}")
     public ResponseEntity<String> viewSecret(@PathVariable String hash) {
         try {
-
             Optional<Secret> optionalSecret = secretService.getSecretByHash(hash);
 
             if (optionalSecret.isEmpty()) {

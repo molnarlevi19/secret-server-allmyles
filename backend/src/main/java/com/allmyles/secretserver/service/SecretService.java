@@ -12,17 +12,31 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Optional;
 
+/**
+ * Service class responsible for business logic related to {@link Secret} entities.
+ */
 @Service
 public class SecretService {
 
     private final SecretRepository secretRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    /**
+     * Constructs a new instance of SecretService.
+     *
+     * @param secretRepository The repository for managing secret entities.
+     */
     @Autowired
     public SecretService(SecretRepository secretRepository) {
         this.secretRepository = secretRepository;
     }
 
-
+    /**
+     * Saves a new secret and returns its hashed text.
+     *
+     * @param secret The secret to be saved.
+     * @return The hashed text of the saved secret.
+     */
     public String saveSecret(Secret secret) {
         Secret newSecret = new Secret();
 
@@ -52,14 +66,32 @@ public class SecretService {
         return hashedText;
     }
 
+    /**
+     * Hashes the provided text using BCrypt.
+     *
+     * @param text The text to be hashed.
+     * @return The hashed text.
+     */
     private String hashTextWithBcrypt(String text) {
         return passwordEncoder.encode(text);
     }
 
+    /**
+     * Retrieves a secret by its hash.
+     *
+     * @param hash The hash of the secret.
+     * @return An optional containing the secret if found, empty otherwise.
+     */
     public Optional<Secret> getSecretByHash(String hash) {
         return secretRepository.findByHash(hash);
     }
 
+    /**
+     * Decreases the remaining views of a secret identified by its hash.
+     *
+     * @param hash The hash of the secret.
+     * @throws EntityNotFoundException if the secret is not found.
+     */
     public void decreaseRemainingViews(String hash) {
         Secret secret = secretRepository.findByHash(hash)
                 .orElseThrow(() -> new EntityNotFoundException("Secret not found with hash: " + hash));
@@ -72,8 +104,4 @@ public class SecretService {
         }
     }
 
-
-    /*public List<Secret> findAll() {
-        return secretRepository.findAll();
-    }*/
 }
