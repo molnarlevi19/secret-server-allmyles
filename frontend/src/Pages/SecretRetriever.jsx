@@ -7,11 +7,14 @@ const SecretRetriever = () => {
 
     const handleRetrieve = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/secrets/secret/${encodeURIComponent(hash)}`);
+            const response = await fetch(`http://localhost:8080/api/secrets/secret/${hash}`);
             if (response.ok) {
                 const data = await response.text();
                 setSecretText(data);
                 setError('');
+            } else if (response.status === 404) {
+                setSecretText(null);
+                setError('Secret not found');
             } else {
                 setSecretText('');
                 setError('Secret not found or cannot be retrieved.');
@@ -19,7 +22,7 @@ const SecretRetriever = () => {
         } catch (error) {
             console.error('Error retrieving secret:', error);
             setSecretText('');
-            setError('An error occurred while retrieving the secret.');
+            setError('Secret not found');
         }
     };
 
