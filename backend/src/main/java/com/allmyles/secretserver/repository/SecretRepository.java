@@ -9,7 +9,5 @@ public interface SecretRepository extends JpaRepository<Secret, Long> {
 
     Optional<Secret> findBySecretText(String text);
 
-    //Secret save(Secret secret);
-
     Optional<Secret> findByHash(String hash);
 }
