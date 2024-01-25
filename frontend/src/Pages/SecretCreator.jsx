@@ -13,7 +13,7 @@ const SecretCreator = () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                text: secretText,
+                secretText: secretText,
                 remainingViews: maxRetrievals,
                 expiryTimeInMinutes: expiryTime,
             }),
