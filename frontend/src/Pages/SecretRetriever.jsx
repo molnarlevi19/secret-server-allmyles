@@ -7,7 +7,7 @@ const SecretRetriever = () => {
 
     const handleRetrieve = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/secrets/secret/${hash}`);
+            const response = await fetch(`/api/secrets/secret/${hash}`);
             if (response.ok) {
                 const data = await response.text();
                 setSecretText(data);
