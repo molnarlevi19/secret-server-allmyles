@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 
 const SecretRetriever = () => {
     const [hash, setHash] = useState('');
@@ -27,20 +31,21 @@ const SecretRetriever = () => {
     };
 
     return (
-        <div>
+        <Container className="retrieve-container mt-5">
             <h2>Secret Retriever</h2>
-            <label>
-                Enter Hash:
-                <input type="text" value={hash} onChange={(e) => setHash(e.target.value)} />
-            </label>
-            <br />
-            <button type="button" onClick={handleRetrieve}>
-                Retrieve Secret
-            </button>
+            <Form>
+                <Form.Group controlId="hash">
+                    <Form.Label>Enter Hash:</Form.Label>
+                    <Form.Control type="text" value={hash} onChange={(e) => setHash(e.target.value)} />
+                </Form.Group>
+                <Button variant="primary" type="button" onClick={handleRetrieve}>
+                    Retrieve Secret
+                </Button>
+            </Form>
             <br />
             {secretText && <p>Secret: {secretText}</p>}
-            {error && <p>Error: {error}</p>}
-        </div>
+            {error && <Alert variant="danger">Error: {error}</Alert>}
+        </Container>
     );
 };
 

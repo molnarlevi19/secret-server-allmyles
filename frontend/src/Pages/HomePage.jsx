@@ -1,7 +1,9 @@
+import React from 'react';
+import Container from 'react-bootstrap/Container';
 const Home = () => (
-    <div>
-        <h1>Welcome to Secret Server</h1>
-    </div>
+    <Container className="home-container mt-5 text-light">
+        <h1 className="text-dark">Welcome to Secret Server</h1>
+    </Container>
 );
 
 export default Home;
