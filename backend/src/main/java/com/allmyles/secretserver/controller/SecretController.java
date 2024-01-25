@@ -70,17 +70,3 @@ public class SecretController {
     }
 
 }
-
-/*
-* @GetMapping("/secret")
-    public ResponseEntity<Secret> getSecret(String text){
-        Optional<Secret> optionalSecret = secretRepository.findBySecretText(text);
-
-        if (optionalSecret.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            Secret secret = optionalSecret.get();
-            return new ResponseEntity<>(secret, HttpStatus.OK);
-        }
-    }
-* */
