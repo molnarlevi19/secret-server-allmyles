@@ -7,6 +7,7 @@ import Layout from "./Pages/Layout/index.js";
 import ErrorPage from "./Pages/ErrorPage.jsx";
 import SecretCreator from "./Pages/SecretCreator.jsx";
 import SecretRetriever from "./Pages/SecretRetriever.jsx";
+import Home from "./Pages/HomePage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
         element: <Layout />,
         errorElement: <ErrorPage />,
         children: [
+            {
+                path: "/",
+                element: <Home />,
+            },
             {
                 path: "/create",
                 element: <SecretCreator />,
