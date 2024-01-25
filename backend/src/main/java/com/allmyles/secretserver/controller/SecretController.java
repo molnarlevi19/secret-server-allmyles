@@ -73,9 +73,8 @@ public class SecretController {
     @GetMapping("/secret/{hash}")
     public ResponseEntity<String> viewSecret(@PathVariable String hash) {
         try {
-            String decodedHash = new String(Base64.getUrlDecoder().decode(hash), StandardCharsets.UTF_8);
 
-            Optional<Secret> optionalSecret = secretService.getSecretByHash(decodedHash);
+            Optional<Secret> optionalSecret = secretService.getSecretByHash(hash);
 
             if (optionalSecret.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -91,7 +90,7 @@ public class SecretController {
                 }
 
                 if (secret.getRemainingViews() > 0) {
-                    secretService.decreaseRemainingViews(decodedHash);
+                    secretService.decreaseRemainingViews(hash);
                 }
 
                 return new ResponseEntity<>(secret.getSecretText(), HttpStatus.OK);
