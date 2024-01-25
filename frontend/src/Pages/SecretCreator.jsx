@@ -9,7 +9,7 @@ const SecretCreator = () => {
 
     const handleSave = async () => {
 
-        const response = await fetch('http://localhost:8080/api/secrets/secret', {
+        const response = await fetch('/api/secrets/secret', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
