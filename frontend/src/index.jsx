@@ -6,6 +6,7 @@ import './index.css'
 import Layout from "./Pages/Layout/index.js";
 import ErrorPage from "./Pages/ErrorPage.jsx";
 import SecretCreator from "./Pages/SecretCreator.jsx";
+import SecretRetriever from "./Pages/SecretRetriever.jsx";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
             {
                 path: "/create",
                 element: <SecretCreator />,
+            },
+            {
+                path: "/retrieve",
+                element: <SecretRetriever />,
             }
         ],
     },
