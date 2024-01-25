@@ -31,7 +31,8 @@ public class SecretService {
         Integer expiryTimeInMinutes = secret.getExpiryTimeInMinutes();
 
 
-        String hashedText = hashTextWithBcrypt(text);
+        String originalHash = hashTextWithBcrypt(text);
+        String hashedText = Base64.getUrlEncoder().encodeToString(originalHash.getBytes());
 
         newSecret.setSecretText(text);
         newSecret.setHash(hashedText);
@@ -47,8 +48,8 @@ public class SecretService {
             newSecret.setExpiresAt(null);
         }
 
-        Secret savedSecret = secretRepository.save(newSecret);
-        return Base64.getUrlEncoder().encodeToString(savedSecret.getHash().getBytes());
+        secretRepository.save(newSecret);
+        return hashedText;
     }
 
     private String hashTextWithBcrypt(String text) {
