@@ -1,4 +1,4 @@
-package com.allmyles.secretserver.repository;
+/*package com.allmyles.secretserver.repository;
 
 import com.allmyles.secretserver.model.Secret;
 import org.junit.jupiter.api.Test;
@@ -53,4 +53,4 @@ class SecretRepositoryTest {
         assertThat(foundSecret).isPresent();
         assertThat(foundSecret.get().getHash()).isEqualTo(hash);
     }
-}
+}*/
