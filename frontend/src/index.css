@@ -31,10 +31,11 @@ body {
   background-color: antiquewhite;
 }
 
-.retrieve-container & .create-container {
-  max-width: 1600px !important;
-  width: 100% !important;
-  margin: 0 auto !important;
+.retrieve-container,
+.create-container {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .home-container {
