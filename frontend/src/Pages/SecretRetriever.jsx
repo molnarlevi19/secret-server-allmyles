@@ -16,12 +16,10 @@ const SecretRetriever = () => {
                 const data = await response.text();
                 setSecretText(data);
                 setError('');
-            } else if (response.status === 404) {
-                setSecretText(null);
-                setError('Secret not found');
             } else {
+                const errorMessage = await response.text();
+                setError(errorMessage);
                 setSecretText('');
-                setError('Secret not found or cannot be retrieved.');
             }
         } catch (error) {
             console.error('Error retrieving secret:', error);
@@ -42,7 +40,7 @@ const SecretRetriever = () => {
                     Retrieve Secret
                 </Button>
             </Form>
-            <br />
+            <br/>
             {secretText && <p>Secret: {secretText}</p>}
             {error && <Alert variant="danger">Error: {error}</Alert>}
         </Container>
