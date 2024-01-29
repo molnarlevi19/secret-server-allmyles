@@ -11,7 +11,5 @@ import java.util.Optional;
  */
 public interface SecretRepository extends JpaRepository<Secret, Long> {
 
-    Optional<Secret> findBySecretText(String secretText);
-
     Optional<Secret> findByHash(String hash);
 }
