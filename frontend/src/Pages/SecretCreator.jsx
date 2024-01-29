@@ -42,7 +42,7 @@ const SecretCreator = () => {
     };
 
     return (
-        <Container className="create-container mt-5 d-flex justify-content-center align-items-center">
+        <Container className="create-container mt-5 justify-content-center align-items-center">
             {hash ? (
                 <div>
                     <p>Hash: {hash}</p>
