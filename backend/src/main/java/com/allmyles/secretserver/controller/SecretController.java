@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/secrets")
-@CrossOrigin(origins = "http://localhost:5173")
 public class SecretController {
 
     private final SecretService secretService;
