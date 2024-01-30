@@ -2,9 +2,8 @@ services:
   - type: web
     name: my-frontend
     runtime: docker
-    repo: ./frontend
+    repo: https://github.com/render-examples/frontend.git
     buildCommand: docker build ./frontend -t my-frontend
-    startCommand: docker run -p 3456:80 --network=my-network --name my-frontend my-frontend
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:postgresql://postgres:5432/Secret-server
@@ -16,9 +15,8 @@ services:
   - type: web
     name: my-java
     runtime: docker
-    repo: ./backend
+    repo: https://github.com/render-examples/backend.git
     buildCommand: docker build ./backend -t my-java
-    startCommand: docker run --network=my-network --name my-java my-java
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:postgresql://postgres:5432/Secret-server
@@ -29,8 +27,7 @@ services:
 
   - type: web
     name: postgres
-    runtime: docker
-    repo: postgres:latest
+    runtime: postgres:latest
     buildCommand: docker pull postgres:latest
     startCommand: >
       docker run --network=my-network --name postgres
