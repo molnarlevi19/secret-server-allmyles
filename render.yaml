@@ -5,8 +5,6 @@ services:
     repo: ./frontend
     buildCommand: docker build ./frontend -t my-frontend
     startCommand: docker run -p 3456:80 --network=my-network --name my-frontend my-frontend
-    dependsOn:
-      - my-java
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:postgresql://postgres:5432/Secret-server
@@ -21,8 +19,6 @@ services:
     repo: ./backend
     buildCommand: docker build ./backend -t my-java
     startCommand: docker run --network=my-network --name my-java my-java
-    dependsOn:
-      - postgres
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:postgresql://postgres:5432/Secret-server
