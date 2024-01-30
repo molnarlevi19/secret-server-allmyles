@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   my-frontend:
@@ -9,6 +9,8 @@ services:
       - my-java
     ports:
       - "3456:80"
+    networks:
+      - my-network
 
   my-java:
     build:
@@ -17,16 +19,26 @@ services:
     depends_on:
       - postgres
     environment:
-      - SQL_SERVER=postgres
-      - DATABASE=Secret-server
-      - USERNAME=postgres
-      - PASSWORD=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/Secret-server
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    networks:
+      - my-network
 
   postgres:
-    build:
-      context: ./db
+    image: postgres:latest
     container_name: postgres
     environment:
       POSTGRES_DB: Secret-server
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - my-network
+
+networks:
+  my-network:
