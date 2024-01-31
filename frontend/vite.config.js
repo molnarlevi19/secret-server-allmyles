@@ -1,18 +1,16 @@
-import {defineConfig, loadEnv} from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode}) => {
-const env = loadEnv(mode, process.cwd(), '')
-  return{
+export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
       "/api": {
-        target: env.VITE_BACKEND_URL,
+        target: "https://secret-server-allmyles-production.up.railway.app/",
         changeOrigin: true,
         secure: false,
       },
     },
   },
-}})
+})
