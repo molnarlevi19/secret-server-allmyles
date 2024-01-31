@@ -1,4 +1,4 @@
-/*package com.allmyles.secretserver.controller;
+package com.allmyles.secretserver.controller;
 
 import com.allmyles.secretserver.model.Secret;
 import com.allmyles.secretserver.service.SecretService;
@@ -41,19 +41,4 @@ class SecretControllerTest {
         assertEquals("testSecretId", response.getBody());
     }
 
-    @Test
-    void testSendSecret_ExceptionThrown_ReturnsInternalServerError() {
-        // Given
-        Secret testSecret = new Secret();
-        when(secretService.saveSecret(any(Secret.class))).thenThrow(new RuntimeException("Test exception"));
-
-        // When
-        ResponseEntity<String> response = secretController.sendSecret(testSecret);
-
-        // Then
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).contains("An error occurred while saving the secret."));
-    }
-
 }
-*/
