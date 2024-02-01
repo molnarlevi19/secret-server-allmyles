@@ -26,7 +26,6 @@
 ```bash
 # Clone this repository
 git clone git@github.com:molnarlevi19/secret-server-allmyles.git
-
 ```
 
 ## Frontend
@@ -42,7 +41,6 @@ npm i
 npm run dev
 
 # Visit localhost:5173
-
 ```
 
 ## Backend
@@ -57,8 +55,17 @@ cd {local_folder_of_cloned_project/backend}
 mvn clean install
 
 # Run the applicaiton
-java -jar target/secret-server.jar
+java -jar target/secret-server-0.0.1-SNAPSHOT.jar
 ```
+
+##  Running with Docker
+
+```bash
+# Navigate to the root folder
+docker build -t secret-server . 
+docker run -p 8080:8080 secret-server
+```
+- Visit the dockerized website on localhost:8080
 
 ## License
 
